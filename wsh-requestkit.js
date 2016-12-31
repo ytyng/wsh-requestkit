@@ -24,8 +24,8 @@ var RequestKit = {
             ieCreated = true;
         }
         var size = {
-            width: ie.application.Document.parentWindow.screen.availWidth,
-            height: ie.application.Document.parentWindow.screen.availHeight
+            width: ie.application.document.parentWindow.screen.availWidth,
+            height: ie.application.document.parentWindow.screen.availHeight
         };
         if (ieCreated) {
             ie.close();
@@ -104,16 +104,16 @@ var RequestKit = {
 RequestKit.IE.prototype.navigate = function (url) {
     this.application.navigate(url);
     while (this.application.busy) WScript.Sleep(100);
-    while (this.application.Document.readyState != "complete") WScript.Sleep(100);
+    while (this.application.document.readyState != "complete") WScript.Sleep(100);
 };
 
 /**
  * ログインフォームにログインする
  */
 RequestKit.IE.prototype.login = function (login_id, password) {
-    for (var i = 0; i < this.application.Document.forms.length; i++) {
+    for (var i = 0; i < this.application.document.forms.length; i++) {
         var filled = false;
-        var form = this.application.Document.forms(i);
+        var form = this.application.document.forms(i);
         var inputs = form.getElementsByTagName('input');
         var submitButton = null;
         var buttons = form.getElementsByTagName('button');
@@ -140,11 +140,45 @@ RequestKit.IE.prototype.login = function (login_id, password) {
                 form.submit();
             }
             while (this.application.busy) WScript.Sleep(100);
-            while (this.application.Document.readyState != "complete") WScript.Sleep(100);
+            while (this.application.document.readyState != "complete") WScript.Sleep(100);
             break;
         }
     }
 };
+
+
+/**
+ * ブラウザ上でスクリプトを実行
+ */
+RequestKit.IE.prototype.script = function (sourceCode, options) {
+  while (this.application.busy) WScript.Sleep(100);
+  while (this.application.document.readyState != "complete") WScript.Sleep(100);
+  if (!options) {
+    options = {};
+  }
+  if (options.mode == "tag") {
+    var scriptTag = this.application.document.createElement("script");
+    scriptTag.text = sourceCode;
+    this.application.document.body.appendChild(scriptTag);
+  } else {
+    this.application.navigate("javascript:" + sourceCode + ";void(0)");
+  }
+  while (this.application.busy) WScript.Sleep(100);
+  while (this.application.document.readyState != "complete") WScript.Sleep(100);
+}
+
+/**
+ * CSSセレクタにマッチしたものをクリック
+ */
+RequestKit.IE.prototype.clickByQuerySelector = function(querySelector) {
+  var scripts = [
+    "var e = document.querySelectorAll('" + querySelector + "');",
+    "for (var i = 0; i < e.length; i++) {",
+    " e[i].click();",
+    "}"
+  ]
+  this.script(scripts.join(''));
+}
 
 /**
  * IEを閉じる

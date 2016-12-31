@@ -44,7 +44,7 @@ Windows Scripting Host を楽に使うためのユーティリティ
 InternetExproler.Application のラッパーインスタンス (IEインスタンス)
 
 
-### RequestKit.getJson(URL)
+### RequestKit.getJson(string URL)
 
 Json を取得します。
 
@@ -56,10 +56,13 @@ Json を取得します。
     data: パースしたデータ
   }
 
+### RequestKit.downloadSave(string URL, string filePath)
+
+URLの内容をローカルファイルに保存します。
 
 ### RequestKit.getDesktopSize()
 
-デスクトップのサイズを取得します
+デスクトップのサイズを取得します。
 
 #### 返り値
 
@@ -68,7 +71,7 @@ Json を取得します。
       height: 高さ
     }
 
-### RequestKit.sendMail(object smtpSetting, object mail)
+### RequestKit.sendMail(Object smtpSetting, Object mail)
 
 メールを送信します。
 
@@ -88,28 +91,35 @@ Json を取得します。
 
 ### IEオブジェクト
 
-### ie.navigate(string "url")
+### .navigate(string URL)
 
 url へ遷移します。遷移後はブラウザが準備完了になるまで待ちます。
 
 
-### ie.login(string "login_id", string "password")
+### .login(string loginId, string password)
 
 表示しているフォームにログインIDとパスワードを入力してログインします。
 フォームの形式によってはログインできない可能性もあります。
 
-### ie.script(string sourceCode)
+### .script(string sourceCode)
 
 ブラウザでJavaScriptを実行します
 
-### ie.clickByQuerySelector(string querySelector)
+### .clickByQuerySelector(string querySelector)
 
 CSSセレクタにマッチしたエレメントをクリックします
 
-### ie.close()
+### .downloadSave(string URL, string filePath)
+
+URLの内容をローカルファイルに保存します。
+現在表示しているページのクッキーをリクエストに含めるので、
+ログイン済みページのコンテンツをダウンロードできます。
+
+
+### .close()
 
 IEを閉じます
 
-### ie.application
+### .application
 
 InternetExproler.Application の実体です。

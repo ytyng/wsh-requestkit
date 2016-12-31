@@ -53,7 +53,7 @@ var RequestKit = {
      * Jsonを取得
      */
     getJson: function (url) {
-        var xmlHttp = new ActiveXObject("Msxml2.ServerXMLHTTP");
+        var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
         xmlHttp.open("GET", url, false);
         xmlHttp.send();
         eval("var data = " + xmlHttp.responseText + ";");
@@ -66,13 +66,27 @@ var RequestKit = {
     },
 
     /**
+     * URLリソースをファイルに保存
+     */
+    downloadSave: function (url, filePath) {
+      var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
+      xmlHttp.open("GET", url, false);
+      xmlHttp.send();
+      var stream = WScript.CreateObject("ADODB.Stream");
+      stream.type = 1;
+      stream.open();
+      stream.write(xmlHttp.responseBody);
+      stream.saveToFile(filePath, 2);
+    },
+
+    /**
      * メールを送信する
      * smtp: host, port, useSsl, userId, password
      * mail: fromAddress, toAddress, subject, body
      */
     sendMail: function (smtp, mail) {
         var cdoSchemas = "http://schemas.microsoft.com/cdo/configuration/";
-        var cdoMessage = new ActiveXObject("CDO.Message");
+        var cdoMessage = WScript.CreateObject("CDO.Message");
         cdoMessage.From = mail.fromAddress;
         cdoMessage.To = mail.toAddress;
         cdoMessage.Subject = mail.subject;
@@ -129,11 +143,14 @@ RequestKit.IE.prototype.login = function (login_id, password) {
             if (input.type == 'submit') {
                 submitButton = input;
             }
+            if (input.type == 'image') {
+                submitButton = input;
+            }
         }
         if (filled) {
             if (submitButton) {
                 submitButton.click();
-            } else if (buttons) {
+            } else if (buttons.length) {
                 // 最後のボタン (雑)
                 buttons[buttons.length - 1].click();
             } else {
@@ -151,34 +168,46 @@ RequestKit.IE.prototype.login = function (login_id, password) {
  * ブラウザ上でスクリプトを実行
  */
 RequestKit.IE.prototype.script = function (sourceCode, options) {
-  while (this.application.busy) WScript.Sleep(100);
-  while (this.application.document.readyState != "complete") WScript.Sleep(100);
-  if (!options) {
-    options = {};
-  }
-  if (options.mode == "tag") {
-    var scriptTag = this.application.document.createElement("script");
-    scriptTag.text = sourceCode;
-    this.application.document.body.appendChild(scriptTag);
-  } else {
-    this.application.navigate("javascript:" + sourceCode + ";void(0)");
-  }
-  while (this.application.busy) WScript.Sleep(100);
-  while (this.application.document.readyState != "complete") WScript.Sleep(100);
-}
+    while (this.application.busy) WScript.Sleep(100);
+    while (this.application.document.readyState != "complete") WScript.Sleep(100);
+    if (!options) {
+      options = {};
+    }
+    if (options.mode == "tag") {
+      var scriptTag = this.application.document.createElement("script");
+      scriptTag.text = sourceCode;
+      this.application.document.body.appendChild(scriptTag);
+    } else {
+      this.application.navigate("javascript:" + sourceCode + ";void(0)");
+    }
+    while (this.application.busy) WScript.Sleep(100);
+    while (this.application.document.readyState != "complete") WScript.Sleep(100);
+};
 
 /**
  * CSSセレクタにマッチしたものをクリック
  */
 RequestKit.IE.prototype.clickByQuerySelector = function(querySelector) {
-  var scripts = [
-    "var e = document.querySelectorAll('" + querySelector + "');",
-    "for (var i = 0; i < e.length; i++) {",
-    " e[i].click();",
-    "}"
-  ]
-  this.script(scripts.join(''));
-}
+    var element = this.application.document.querySelector(querySelector);
+    element.click();
+    while (this.application.busy) WScript.Sleep(100);
+    while (this.application.document.readyState != "complete") WScript.Sleep(100);
+};
+
+/**
+ * URLリソースを保存 ログインクッキーを使う
+ */
+RequestKit.IE.prototype.downloadSave = function(url, filePath) {
+    var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
+    xmlHttp.open("GET", url, false);
+    xmlHttp.setRequestHeader('Cookie', this.application.document.cookie);
+    xmlHttp.send();
+    var stream = WScript.CreateObject("ADODB.Stream");
+    stream.type = 1;
+    stream.open();
+    stream.write(xmlHttp.responseBody);
+    stream.saveToFile(filePath, 2);
+};
 
 /**
  * IEを閉じる

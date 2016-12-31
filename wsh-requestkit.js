@@ -86,6 +86,14 @@ var RequestKit = {
         cdoMessage.Configuration.Fields.Item(cdoSchemas + "smtpusessl") = smtp.useSsl;
         cdoMessage.Configuration.Fields.Update();
         cdoMessage.Send();
+    },
+
+    /**
+     * 発声する
+     */
+    say: function(message) {
+      var sapi = WScript.CreateObject("SAPI.SpVoice");
+      sapi.Speak(message);
     }
 
 };
@@ -139,7 +147,7 @@ RequestKit.IE.prototype.login = function (login_id, password) {
 };
 
 /**
- * IEでページ移動
+ * IEを閉じる
  */
 RequestKit.IE.prototype.close = function () {
     this.application.Quit();

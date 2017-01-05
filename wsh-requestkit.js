@@ -37,9 +37,13 @@ var RequestKit = {
      * IEを起動
      */
     IE: function (options) {
-        this.application = WScript.CreateObject("InternetExplorer.Application");
         if (!options) {
             options = {};
+        }
+        if (options.application) {
+           this.application = options.application;
+        } else {
+           this.application = WScript.CreateObject("InternetExplorer.Application");
         }
         if (options.visible == null) {
             this.application.Visible = true;
@@ -47,6 +51,36 @@ var RequestKit = {
             this.application.Visible = options.visible;
         }
         while (this.application.busy) WScript.Sleep(100);
+    },
+
+    /**
+     * 起動済み IE をタイトル一致で探して IE インスタンスにする
+     */
+    findIEByTitle: function(title) {
+      var shell = WScript.CreateObject('Shell.Application');
+      var windows = shell.windows();
+      for(i = 0; i <windows.count; i++) {
+        var w = windows.Item(i);
+        if (w.document) {
+          if (w.document.title == title) {
+            return new this.IE({application: w});
+          }
+        }
+      }
+    },
+
+    /**
+     * 起動済み IE をURL一致で探して IE インスタンスにする
+     */
+    findIEByUrl: function(url) {
+      var shell = WScript.CreateObject('Shell.Application');
+      var windows = shell.windows();
+      for(i = 0; i <windows.count; i++) {
+        var w = windows.Item(i);
+        if (w.LocationUrl == url) {
+          return new this.IE({application: w});
+        }
+      }
     },
 
     /**
@@ -193,6 +227,87 @@ RequestKit.IE.prototype.clickByQuerySelector = function(querySelector) {
     while (this.application.busy) WScript.Sleep(100);
     while (this.application.document.readyState != "complete") WScript.Sleep(100);
 };
+
+/**
+ * console.log()
+ */
+RequestKit.IE.prototype.log = function(message) {
+    this.script("console.log('" + message + "')");
+}
+
+RequestKit.IE.prototype.logAtters = function(obj) {
+  for(var attr in obj) {
+    this.log(attr + ": " + obj[attr]);
+  }
+}
+
+
+/**
+ * フォームの入力をする
+ */
+RequestKit.IE.prototype.fillInputs = function(nameValues) {
+    for (var name in nameValues) {
+      var value = nameValues[name];
+        var querySelector = '[name="' + name + '"]';
+        var elements = this.application.document.querySelectorAll(querySelector);
+        if (!elements) {
+            continue;
+        }
+        for(var j=0; j < elements.length; j++) {
+          var element = elements[j];
+          // this.logAtters(element);
+          // WScript.Echo(element.tagName);
+          //RequestKit.showAttrs(element);
+          var tagName = element.tagName.toLowerCase();
+          if (tagName == 'input') {
+            // WScript.Echo(element.type);
+            if (element.type.toLowerCase() == 'radio') {
+              if (element.value == value) {
+                element.checked = true;
+              }
+            } else if (element.type.toLowerCase() == 'checkbox') {
+              if (element.value == value) {
+                element.checked = true;
+              }
+            } else {
+              element.value = value;
+            }
+          } else if (tagName == 'textarea') {
+            element.innerText = value;
+          } else if (tagName == 'select') {
+            var options = element.getElementsByTagName('option');
+            for (var i = 0; i < options.length; i++) {
+              var option = options[i];
+              var text = option.innerText.replace(/(^\s+)|(\s+$)/g, "");
+              if (option.value == value || text == value) {
+                element.selectedIndex = i;
+                break;
+              }
+            }
+          }
+      }
+    }
+};
+
+/**
+ * ダウンロード確認ダイアログを閉じる
+ * 自身のIEだけをアクティブにしたかったがやり方がわからなかった。
+ * AppActivate は、ウインドウ名を後方一致で検索する
+ */
+RequestKit.IE.prototype.activate = function() {
+  var wscriptShell = WScript.CreateObject("WScript.Shell");
+  wscriptShell.AppActivate('Internet Explorer');
+}
+
+/**
+ * 保存するか確認しているダイアログを閉じる(保存する)
+ */
+RequestKit.IE.prototype.applySaveDialog = function() {
+  this.activate();
+  var wscriptShell = WScript.CreateObject("WScript.Shell");
+  wscriptShel.SendKeys('%{s}');
+}
+
 
 /**
  * URLリソースを保存 ログインクッキーを使う

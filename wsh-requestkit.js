@@ -170,7 +170,7 @@ var RequestKit = {
     },
 
     /**
-     * WMI Wbem にクエリを発行し、結果を SWbemPropertyRecord の配列で取得
+     * WMI Wbem に WQL クエリを発行し、結果を SWbemRecord の配列で取得
      */
     wmiExecQuery: function (query, namespace) {
         if (!namespace) {
@@ -179,12 +179,11 @@ var RequestKit = {
         var swbemLocator = WScript.CreateObject("WbemScripting.SWbemLocator");
         var wmiServer = swbemLocator.ConnectServer(null, namespace);
         var swbemObjectSet = wmiServer.ExecQuery(query);
-        var e = new Enumerator(swbemObjectSet);
+        // var e = new Enumerator(swbemObjectSet);
         var swbemRecords = [];
-        var self = this;
         this.enumerate(swbemObjectSet, function (swbemObject) {
-            swbemRecords.push(new self.SWbemRecord(swbemObject));
-        });
+            swbemRecords.push(new this.SWbemRecord(swbemObject));
+        }, this);
         return swbemRecords;
     },
 
@@ -200,7 +199,7 @@ var RequestKit = {
         var wscriptShell = WScript.CreateObject("WScript.Shell");
         var query = "SELECT Caption, ProcessId FROM Win32_Process WHERE Caption='" + exeName + "'";
         var propRecords = this.wmiExecQuery(query, null);
-        this.each(propRecords, function(r){
+        this.each(propRecords, function(i, r){
             wscriptShell.AppActivate(r.ProcessId);
         });
     },
@@ -338,12 +337,9 @@ RequestKit.IE.prototype.fillInputs = function (nameValues) {
         }
         for (var j = 0; j < elements.length; j++) {
             var element = elements[j];
-            // this.logAtters(element);
-            // WScript.Echo(element.tagName);
-            //RequestKit.showAttrs(element);
+
             var tagName = element.tagName.toLowerCase();
             if (tagName == 'input') {
-                // WScript.Echo(element.type);
                 if (element.type.toLowerCase() == 'radio') {
                     if (element.value == value) {
                         element.checked = true;
@@ -373,9 +369,9 @@ RequestKit.IE.prototype.fillInputs = function (nameValues) {
 };
 
 /**
- * ダウンロード確認ダイアログを閉じる
- * 自身のIEだけをアクティブにしたかったがやり方がわからなかった。
- * AppActivate は、ウインドウ名を後方一致で検索する
+ * IE のウインドウを最前面にします。
+ * ただし、複数のウインドウがある場合、どれが最前面になるか不定です。
+ * 改修案わからず
  */
 RequestKit.IE.prototype.activate = function () {
     // var wscriptShell = WScript.CreateObject("WScript.Shell");
@@ -422,7 +418,7 @@ RequestKit.IE.prototype.close = function () {
  */
 RequestKit.SWbemRecord.prototype.showAttrs = function () {
     var log = [];
-    RequestKit.each(this.propertyNames, function(v){
+    RequestKit.each(this.propertyNames, function(i, v){
         log.push(v + ": " + this[v]);
     }, this);
     WScript.Echo(log.join("\n"));

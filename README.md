@@ -31,24 +31,26 @@ Windows Scripting Host を楽に使うためのユーティリティ
       "password": "hoge-password"
     }
 
-の JSON が帰ってくる想定。
+の JSON が帰ってくると仮定しています。
 
 
 
 ## リファレンス
 
-### new RequestKit.IE()
+### RequestKit
 
-#### 返り値
+#### new RequestKit.IE()
+
+##### 返り値
 
 InternetExproler.Application のラッパーインスタンス (IEインスタンス)
 
 
-### RequestKit.getJson(string URL)
+#### RequestKit.getJson(string URL)
 
 Json を取得します。
 
-#### 返り値
+##### 返り値
 
   {
     xmlHttp: xmlHttpオブジェクト,
@@ -56,22 +58,22 @@ Json を取得します。
     data: パースしたデータ
   }
 
-### RequestKit.downloadSave(string URL, string filePath)
+#### RequestKit.downloadSave(string URL, string filePath)
 
 URLの内容をローカルファイルに保存します。
 
-### RequestKit.getDesktopSize()
+#### RequestKit.getDesktopSize()
 
 デスクトップのサイズを取得します。
 
-#### 返り値
+##### 返り値
 
     {
       width: 幅,
       height: 高さ
     }
 
-### RequestKit.sendMail(Object smtpSetting, Object mail)
+#### RequestKit.sendMail(Object smtpSetting, Object mail)
 
 メールを送信します。
 
@@ -89,37 +91,78 @@ URLの内容をローカルファイルに保存します。
         body: "本文です。テストメール"
       });
 
-### IEオブジェクト
 
-### .navigate(string URL)
+#### RequestKit.wmiExecQuery()
+
+WMI Wbem に WQL クエリを発行し、結果を RequestKit.SWbemRecord インスタンスの
+配列として取得します。
+
+
+### RequestKit.IE オブジェクト
+
+#### .navigate(string URL)
 
 url へ遷移します。遷移後はブラウザが準備完了になるまで待ちます。
 
 
-### .login(string loginId, string password)
+#### .login(string loginId, string password)
 
 表示しているフォームにログインIDとパスワードを入力してログインします。
 フォームの形式によってはログインできない可能性もあります。
 
-### .script(string sourceCode)
+#### .script(string sourceCode)
 
 ブラウザでJavaScriptを実行します
 
-### .clickByQuerySelector(string querySelector)
+#### .clickByQuerySelector(string querySelector)
 
 CSSセレクタにマッチしたエレメントをクリックします
 
-### .downloadSave(string URL, string filePath)
+#### .fillInputs(object)
+
+フォームの name と value からなる連想配列を引数で与えると、
+ページ内のフォームにその値を入力します。
+
+##### 例
+
+    ie.fillInputs({
+        "name": "ほげ太郎",
+        "email": "xxxxx@example.com",
+        "gender": "1",
+        "country": "Japan"
+    })
+
+#### .downloadSave(string URL, string filePath)
 
 URLの内容をローカルファイルに保存します。
 現在表示しているページのクッキーをリクエストに含めるので、
 ログイン済みページのコンテンツをダウンロードできます。
 
+#### .activate()
 
-### .close()
+IEのウインドウをアクティブにします。
+ただし複数のIEが起動している場合不具合があり、起動しているIEオブジェクトが
+最前面にならずに別のIEが最前面になるかもしれません。
+(修正案わからず)
+
+#### .applySaveDialog()
+
+「ファイルを保存しますか?」のダイアログが出てきたとき、「保存」のショートカットを押します。
+上記 .activate() と SendKeys() を使うので、動作は不安定です。
+
+#### .close()
 
 IEを閉じます
 
-### .application
+#### .application
 
 InternetExproler.Application の実体です。
+
+
+### RequestKit.SWbemRecord オブジェクト
+
+WQL 結果の各フィールドがプロパティとして格納されています。
+
+#### .showAttrs()
+
+フィールドをポップアップで表示します。デバッグ用

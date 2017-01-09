@@ -1,6 +1,8 @@
+/* -*- coding: cp932 -*- */
+/* vim: set expandtab fenc=cp932 */
 var RequestKit = {
     /**
-     * ç°¡æ˜“ enumerateã€‚ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã«é †ã« func ã‚’é©ç”¨ã™ã‚‹ã€‚
+     * ŠÈˆÕ enumerateBƒRƒŒƒNƒVƒ‡ƒ“‚É‡‚É func ‚ğ“K—p‚·‚éB
      */
     enumerate: function (collection, func, _this) {
         if (!_this) {
@@ -14,7 +16,7 @@ var RequestKit = {
     },
 
     /**
-     * ç°¡æ˜“ eachã€‚é…åˆ—è¦ç´ ã«é †ã« func ã‚’é©ç”¨ã™ã‚‹ã€‚
+     * ŠÈˆÕ eachB”z—ñ—v‘f‚É‡‚É func ‚ğ“K—p‚·‚éB
      */
     each: function (ary, func, _this) {
         if (!_this) {
@@ -26,7 +28,7 @@ var RequestKit = {
     },
 
     /**
-     * ãƒ‡ãƒãƒƒã‚°ç”¨ objã®å±æ€§ã‚’åˆ—æŒ™ã—ã¦è¡¨ç¤º
+     * ƒfƒoƒbƒO—p obj‚Ì‘®«‚ğ—ñ‹“‚µ‚Ä•\¦
      */
     showAttrs: function (obj) {
         var attrs = [];
@@ -37,8 +39,8 @@ var RequestKit = {
     },
 
     /**
-     * ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã‚µã‚¤ã‚ºã‚’å–å¾—
-     * @param ie: this.IE ã‚ã‚Œã°é«˜é€Ÿã«å‡¦ç†ã™ã‚‹
+     * ƒfƒXƒNƒgƒbƒvƒTƒCƒY‚ğæ“¾
+     * @param ie: this.IE ‚ ‚ê‚Î‚‘¬‚Éˆ—‚·‚é
      * @returns {{width: Number, height: Number}}
      */
     getDesktopSize: function (ie) {
@@ -59,7 +61,7 @@ var RequestKit = {
     },
 
     /**
-     * IEã‚’èµ·å‹•
+     * IE‚ğ‹N“®
      */
     IE: function (options) {
         if (!options) {
@@ -79,7 +81,7 @@ var RequestKit = {
     },
 
     /**
-     * èµ·å‹•æ¸ˆã¿ IE ã‚’ã‚¿ã‚¤ãƒˆãƒ«ä¸€è‡´ã§æ¢ã—ã¦ IE ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã«ã™ã‚‹
+     * ‹N“®Ï‚İ IE ‚ğƒ^ƒCƒgƒ‹ˆê’v‚Å’T‚µ‚Ä IE ƒCƒ“ƒXƒ^ƒ“ƒX‚É‚·‚é
      */
     findIEByTitle: function (title) {
         var shell = WScript.CreateObject('Shell.Application');
@@ -95,7 +97,7 @@ var RequestKit = {
     },
 
     /**
-     * èµ·å‹•æ¸ˆã¿ IE ã‚’URLä¸€è‡´ã§æ¢ã—ã¦ IE ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã«ã™ã‚‹
+     * ‹N“®Ï‚İ IE ‚ğURLˆê’v‚Å’T‚µ‚Ä IE ƒCƒ“ƒXƒ^ƒ“ƒX‚É‚·‚é
      */
     findIEByUrl: function (url) {
         var shell = WScript.CreateObject('Shell.Application');
@@ -109,7 +111,7 @@ var RequestKit = {
     },
 
     /**
-     * Jsonã‚’å–å¾—
+     * Json‚ğæ“¾
      */
     getJson: function (url) {
         var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
@@ -125,7 +127,7 @@ var RequestKit = {
     },
 
     /**
-     * URLãƒªã‚½ãƒ¼ã‚¹ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
+     * URLƒŠƒ\[ƒX‚ğƒtƒ@ƒCƒ‹‚É•Û‘¶
      */
     downloadSave: function (url, filePath) {
         var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
@@ -139,7 +141,7 @@ var RequestKit = {
     },
 
     /**
-     * ãƒ¡ãƒ¼ãƒ«ã‚’é€ä¿¡ã™ã‚‹
+     * ƒ[ƒ‹‚ğ‘—M‚·‚é
      * smtp: host, port, useSsl, userId, password
      * mail: fromAddress, toAddress, subject, body
      */
@@ -162,7 +164,7 @@ var RequestKit = {
     },
 
     /**
-     * ç™ºå£°ã™ã‚‹
+     * ”­º‚·‚é
      */
     say: function (message) {
         var sapi = WScript.CreateObject("SAPI.SpVoice");
@@ -170,7 +172,7 @@ var RequestKit = {
     },
 
     /**
-     * WMI Wbem ã« WQL ã‚¯ã‚¨ãƒªã‚’ç™ºè¡Œã—ã€çµæœã‚’ SWbemRecord ã®é…åˆ—ã§å–å¾—
+     * WMI Wbem ‚É WQL ƒNƒGƒŠ‚ğ”­s‚µAŒ‹‰Ê‚ğ SWbemRecord ‚Ì”z—ñ‚Åæ“¾
      */
     wmiExecQuery: function (query, namespace) {
         if (!namespace) {
@@ -188,12 +190,12 @@ var RequestKit = {
     },
 
     /**
-     * ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ exe åæŒ‡å®šã§ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹ã€‚
-     * é€šå¸¸ã¯ã€wscriptShell.AppActivate ã«ã‚¢ãƒ—ãƒªåã‚’å…¥ã‚Œã‚Œã°å¾Œæ–¹ä¸€è‡´ã§ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–ã•ã‚Œã‚‹ã¯ãšã ãŒã€
-     * ãã‚Œã ã¨ IE ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã‚‰ãªã„ã®ã§ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§ã‚’ä½¿ã†
-     * ä¾‹: RequestKit.activateProcessByExeName("iexplore.exe");
-     * ã‚¯ã‚¨ãƒªã«ãƒãƒƒãƒã—ãŸã™ã¹ã¦ã®IEã‚’ AppActivate ã—ã¦ã„ã‚‹ãŒã€
-     * ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã‚‹ã®ã¯1ã¤ã ã‘ (è¤‡æ•°IEã§æœ€å‰é¢ã®ã‚‚ã®ã ã‘?) ã®ã‚ˆã†ã 
+     * ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ exe –¼w’è‚ÅƒAƒNƒeƒBƒu‚É‚·‚éB
+     * ’Êí‚ÍAwscriptShell.AppActivate ‚ÉƒAƒvƒŠ–¼‚ğ“ü‚ê‚ê‚ÎŒã•ûˆê’v‚ÅƒAƒNƒeƒBƒu‰»‚³‚ê‚é‚Í‚¸‚¾‚ªA
+     * ‚»‚ê‚¾‚Æ IE ‚ªƒAƒNƒeƒBƒu‚É‚È‚ç‚È‚¢‚Ì‚Å‚±‚Ìƒƒ\ƒbƒh‚Å‚ğg‚¤
+     * —á: RequestKit.activateProcessByExeName("iexplore.exe");
+     * ƒNƒGƒŠ‚Éƒ}ƒbƒ`‚µ‚½‚·‚×‚Ä‚ÌIE‚ğ AppActivate ‚µ‚Ä‚¢‚é‚ªA
+     * ƒAƒNƒeƒBƒu‚É‚È‚é‚Ì‚Í1‚Â‚¾‚¯ (•¡”IE‚ÅÅ‘O–Ê‚Ì‚à‚Ì‚¾‚¯?) ‚Ì‚æ‚¤‚¾
      */
     activateProcessByExeName: function (exeName) {
         var wscriptShell = WScript.CreateObject("WScript.Shell");
@@ -205,8 +207,8 @@ var RequestKit = {
     },
 
     /**
-     * SWbemObject ã‚’ãƒ©ãƒƒãƒ—ã—ãŸã‚¯ãƒ©ã‚¹
-     * wmiExecQuery ãƒ¡ã‚½ãƒƒãƒ‰ã§ä½œã‚‰ã‚Œã‚‹ã€‚
+     * SWbemObject ‚ğƒ‰ƒbƒv‚µ‚½ƒNƒ‰ƒX
+     * wmiExecQuery ƒƒ\ƒbƒh‚Åì‚ç‚ê‚éB
      */
     SWbemRecord: function (swbemObject) {
         this.swbemObject = swbemObject;
@@ -230,7 +232,7 @@ var RequestKit = {
 // ------------------------------------------------------------------------------------------------------------
 
 /**
- * IEã§ãƒšãƒ¼ã‚¸ç§»å‹•
+ * IE‚Åƒy[ƒWˆÚ“®
  */
 RequestKit.IE.prototype.navigate = function (url) {
     this.application.navigate(url);
@@ -239,7 +241,7 @@ RequestKit.IE.prototype.navigate = function (url) {
 };
 
 /**
- * ãƒ­ã‚°ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ ã«ãƒ­ã‚°ã‚¤ãƒ³ã™ã‚‹
+ * ƒƒOƒCƒ“ƒtƒH[ƒ€‚ÉƒƒOƒCƒ“‚·‚é
  */
 RequestKit.IE.prototype.login = function (login_id, password) {
     for (var i = 0; i < this.application.document.forms.length; i++) {
@@ -268,7 +270,7 @@ RequestKit.IE.prototype.login = function (login_id, password) {
             if (submitButton) {
                 submitButton.click();
             } else if (buttons.length) {
-                // æœ€å¾Œã®ãƒœã‚¿ãƒ³ (é›‘)
+                // ÅŒã‚Ìƒ{ƒ^ƒ“ (G)
                 buttons[buttons.length - 1].click();
             } else {
                 form.submit();
@@ -282,7 +284,7 @@ RequestKit.IE.prototype.login = function (login_id, password) {
 
 
 /**
- * ãƒ–ãƒ©ã‚¦ã‚¶ä¸Šã§ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å®Ÿè¡Œ
+ * ƒuƒ‰ƒEƒUã‚ÅƒXƒNƒŠƒvƒg‚ğÀs
  */
 RequestKit.IE.prototype.script = function (sourceCode, options) {
     while (this.application.busy) WScript.Sleep(100);
@@ -302,7 +304,7 @@ RequestKit.IE.prototype.script = function (sourceCode, options) {
 };
 
 /**
- * CSSã‚»ãƒ¬ã‚¯ã‚¿ã«ãƒãƒƒãƒã—ãŸã‚‚ã®ã‚’ã‚¯ãƒªãƒƒã‚¯
+ * CSSƒZƒŒƒNƒ^‚Éƒ}ƒbƒ`‚µ‚½‚à‚Ì‚ğƒNƒŠƒbƒN
  */
 RequestKit.IE.prototype.clickByQuerySelector = function (querySelector) {
     var element = this.application.document.querySelector(querySelector);
@@ -325,7 +327,7 @@ RequestKit.IE.prototype.logAtters = function (obj) {
 };
 
 /**
- * ãƒ•ã‚©ãƒ¼ãƒ ã®å…¥åŠ›ã‚’ã™ã‚‹
+ * ƒtƒH[ƒ€‚Ì“ü—Í‚ğ‚·‚é
  */
 RequestKit.IE.prototype.fillInputs = function (nameValues) {
     for (var name in nameValues) {
@@ -369,9 +371,9 @@ RequestKit.IE.prototype.fillInputs = function (nameValues) {
 };
 
 /**
- * IE ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’æœ€å‰é¢ã«ã—ã¾ã™ã€‚
- * ãŸã ã—ã€è¤‡æ•°ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãŒã‚ã‚‹å ´åˆã€ã©ã‚ŒãŒæœ€å‰é¢ã«ãªã‚‹ã‹ä¸å®šã§ã™ã€‚
- * æ”¹ä¿®æ¡ˆã‚ã‹ã‚‰ãš
+ * IE ‚ÌƒEƒCƒ“ƒhƒE‚ğÅ‘O–Ê‚É‚µ‚Ü‚·B
+ * ‚½‚¾‚µA•¡”‚ÌƒEƒCƒ“ƒhƒE‚ª‚ ‚éê‡A‚Ç‚ê‚ªÅ‘O–Ê‚É‚È‚é‚©•s’è‚Å‚·B
+ * ‰üCˆÄ‚í‚©‚ç‚¸
  */
 RequestKit.IE.prototype.activate = function () {
     // var wscriptShell = WScript.CreateObject("WScript.Shell");
@@ -380,7 +382,7 @@ RequestKit.IE.prototype.activate = function () {
 };
 
 /**
- * ä¿å­˜ã™ã‚‹ã‹ç¢ºèªã—ã¦ã„ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‰ã˜ã‚‹(ä¿å­˜ã™ã‚‹)
+ * •Û‘¶‚·‚é‚©Šm”F‚µ‚Ä‚¢‚éƒ_ƒCƒAƒƒO‚ğ•Â‚¶‚é(•Û‘¶‚·‚é)
  */
 RequestKit.IE.prototype.applySaveDialog = function () {
     this.activate();
@@ -389,7 +391,7 @@ RequestKit.IE.prototype.applySaveDialog = function () {
 };
 
 /**
- * URLãƒªã‚½ãƒ¼ã‚¹ã‚’ä¿å­˜ ãƒ­ã‚°ã‚¤ãƒ³ã‚¯ãƒƒã‚­ãƒ¼ã‚’ä½¿ã†
+ * URLƒŠƒ\[ƒX‚ğ•Û‘¶ ƒƒOƒCƒ“ƒNƒbƒL[‚ğg‚¤
  */
 RequestKit.IE.prototype.downloadSave = function (url, filePath) {
     var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
@@ -404,7 +406,7 @@ RequestKit.IE.prototype.downloadSave = function (url, filePath) {
 };
 
 /**
- * IEã‚’é–‰ã˜ã‚‹
+ * IE‚ğ•Â‚¶‚é
  */
 RequestKit.IE.prototype.close = function () {
     this.application.Quit();
@@ -414,7 +416,7 @@ RequestKit.IE.prototype.close = function () {
 // RequestKit.SWbemRecord
 // ------------------------------------------------------------------------------------------------------------
 /**
- * å…¨ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¡¨ç¤º (ãƒ‡ãƒãƒƒã‚°ç”¨)
+ * ‘SƒvƒƒpƒeƒB‚ğ•\¦ (ƒfƒoƒbƒO—p)
  */
 RequestKit.SWbemRecord.prototype.showAttrs = function () {
     var log = [];

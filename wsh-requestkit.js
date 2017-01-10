@@ -223,6 +223,38 @@ var RequestKit = {
                 this.propertyNames.push(swbemProperty.Name);
             }
         }, this);
+    },
+
+    /**
+     * 環境変数を取得
+     */
+    getEnvironmentString: function (envName) {
+        var wscriptShell = WScript.CreateObject("WScript.Shell");
+        return wscriptShell.ExpandEnvironmentStrings("%" + envName + "%");
+    },
+
+    path: {
+        /**
+         * ホームディレクトリ
+         */
+        home: function () {
+            return this.parent(this.special("MyDocuments"));
+        },
+
+        special: function (specialFolderName) {
+            var wscriptShell = WScript.CreateObject("WScript.Shell");
+            return wscriptShell.SpecialFolders(specialFolderName);
+        },
+        parent: function (path) {
+            return path.replace(/\\[^\\]+$/, '');
+        },
+
+        join: function (parent, child) {
+            return parent.replace(/\\$/, '') + '\\' + child.replace(/^\\/, '')
+        }
+
+
+
     }
 
 };
@@ -282,6 +314,26 @@ RequestKit.IE.prototype.login = function (login_id, password) {
     }
 };
 
+/**
+ * name に一致するボタンをクリック
+ * clickByQuerySelector が動かない場合の対策
+ */
+RequestKit.IE.prototype.clickButton = function (buttonName) {
+    function findAndClick(elements) {
+        RequestKit.each(elements, function(i, element) {
+            if (element.name == buttonName) {
+                element.click();
+            } else if (element.id == buttonName) {
+                element.click();
+            }
+        });
+    }
+    var d = this.application.document;
+
+    findAndClick(d.getElementsByTagName('input'));
+    findAndClick(d.getElementsByTagName('button'));
+    findAndClick(d.getElementsByTagName('a'));
+};
 
 /**
  * ブラウザ上でスクリプトを実行
@@ -383,21 +435,38 @@ RequestKit.IE.prototype.activate = function () {
 
 /**
  * 保存するか確認しているダイアログを閉じる(保存する)
+ * ダメ。スクリプトで保存ボタンは押せないようだ。
  */
 RequestKit.IE.prototype.applySaveDialog = function () {
     this.activate();
     var wscriptShell = WScript.CreateObject("WScript.Shell");
-    wscriptShel.SendKeys('%{s}');
+    wscriptShell.SendKeys('%{s}');
+    wscriptShell.SendKeys(' ');
 };
 
 /**
  * URLリソースを保存 ログインクッキーを使う
  */
-RequestKit.IE.prototype.downloadSave = function (url, filePath) {
+RequestKit.IE.prototype.downloadSave = function (url, filePath, options) {
+    if (!options) {
+      options = {};
+    }
+    var request_method = "GET";
+    if (options['method']) {
+        request_method = options['method'];
+    }
     var xmlHttp = WScript.CreateObject("Msxml2.ServerXMLHTTP");
-    xmlHttp.open("GET", url, false);
+    xmlHttp.open(request_method, url, false);
     xmlHttp.setRequestHeader('Cookie', this.application.document.cookie);
-    xmlHttp.send();
+    if (request_method.toUpperCase()  == 'POST') {
+        xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+
+    if (options['dataString']) {
+        xmlHttp.send(options['dataString']);
+    } else {
+        xmlHttp.send();
+    }
     var stream = WScript.CreateObject("ADODB.Stream");
     stream.type = 1;
     stream.open();
